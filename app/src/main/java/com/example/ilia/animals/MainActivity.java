@@ -24,10 +24,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        type = (TextView) findViewById(R.id.type);
-        name = (TextView) findViewById(R.id.name);
-        age = (TextView) findViewById(R.id.age);
-        refresh = (Button) findViewById(R.id.refresh);
+        type = (TextView) findViewById(R.id.text_type);
+        name = (TextView) findViewById(R.id.text_name);
+        age = (TextView) findViewById(R.id.text_age);
+        refresh = (Button) findViewById(R.id.button_refresh);
 
         getSupportLoaderManager().initLoader(LOADER_ID, null, new AnimalLoaderCallBacks());
         Log.v(TAG, "onCreate");
