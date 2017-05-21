@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class AnimalLoader extends AsyncTaskLoader<Animal> {
 
-    private static final String TAG= "RatesLoader";
+    private static final String TAG= "AnimalLoader";
     private List<Animal> animals;
 
 
