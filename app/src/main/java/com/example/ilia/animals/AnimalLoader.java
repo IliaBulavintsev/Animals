@@ -8,7 +8,7 @@ import java.util.List;
 
 public class AnimalLoader extends AsyncTaskLoader<List<Animal>> implements OncontentChangeListener {
 
-    private static final String TAG= "RatesLoader";
+    private static final String TAG= "AnimalLoader";
     private List<Animal> animals;
     private AnimalGenerator animalGenerator;
 
