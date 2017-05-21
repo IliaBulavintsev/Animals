@@ -71,9 +71,9 @@ public class AnimalsAdapter extends BaseAdapter {
         public final TextView nameTextView;
 
         public ViewHolder(View itemView) {
-            speciesTextView = (TextView) itemView.findViewById(R.id.type);
-            ageTextView = (TextView) itemView.findViewById(R.id.age);
-            nameTextView = (TextView) itemView.findViewById(R.id.name);
+            speciesTextView = (TextView) itemView.findViewById(R.id.text_type);
+            ageTextView = (TextView) itemView.findViewById(R.id.text_age);
+            nameTextView = (TextView) itemView.findViewById(R.id.text_name);
         }
     }
 }
