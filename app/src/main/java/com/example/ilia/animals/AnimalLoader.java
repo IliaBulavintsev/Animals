@@ -5,26 +5,26 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 import java.util.List;
-import java.util.Random;
 
-public class AnimalLoader extends AsyncTaskLoader<Animal> {
+public class AnimalLoader extends AsyncTaskLoader<List<Animal>> implements OncontentChangeListener {
 
     private static final String TAG= "RatesLoader";
     private List<Animal> animals;
+    private AnimalGenerator animalGenerator;
 
 
-    public AnimalLoader(Context context) {
+
+    public AnimalLoader(Context context, AnimalGenerator animalGenerator) {
         super(context);
-        this.animals = AnimalGenerator.providersAnimals();
+        this.animalGenerator = animalGenerator;
+        this.animalGenerator.addOnContentChangeListener(this);
 
     }
 
     @Override
-    public Animal loadInBackground() {
-        Log.v(TAG, "on back");
-        Random rn = new Random();
-        int id = rn.nextInt(animals.size());
-        return animals.get(id);
+    public List<Animal> loadInBackground() {
+        Log.e(TAG, "on back" + animalGenerator.getAnimals().toString());
+        return animalGenerator.getAnimals();
     }
 
 
@@ -32,7 +32,26 @@ public class AnimalLoader extends AsyncTaskLoader<Animal> {
     @Override
     protected void onStartLoading() {
         super.onStartLoading();
-        forceLoad();
+        Log.e(TAG, "onStartLoading: animals:" + animals );
+        if ((animals == null) || takeContentChanged()) {
+            Log.e(TAG, "onStartLoading: forceload");
+            forceLoad();
+        } else {
+            Log.e(TAG, "onStartLoading: noforceload:"  );
+//            deliverResult(animals);
+        }
         Log.v(TAG, "on start loading");
+    }
+
+    @Override
+    public void deliverResult(List<Animal> data) {
+        super.deliverResult(data);
+        Log.e(TAG, "deliverResult: "+ data.toString() );
+        animals = data;
+    }
+
+    @Override
+    public void onAnimalAdded(AnimalGenerator sender, Animal animal) {
+        onContentChanged();
     }
 }

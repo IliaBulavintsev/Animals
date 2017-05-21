@@ -1,62 +1,72 @@
 package com.example.ilia.animals;
 
+import android.content.Intent;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private final static int LOADER_ID = 1;
     private final static String TAG = "MainActivity";
 
-    private TextView type;
-    private TextView age;
-    private TextView name;
-    private Button refresh;
+    private ListView listView;
+    private AnimalsAdapter animalsAdapter;
+
+    private AnimalGenerator animalGenerator;
+    private Button addButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        type = (TextView) findViewById(R.id.type);
-        name = (TextView) findViewById(R.id.name);
-        age = (TextView) findViewById(R.id.age);
-        refresh = (Button) findViewById(R.id.refresh);
+        AnimalGeneratorProvider provider = (AnimalGeneratorProvider) getApplication();
+        animalGenerator = provider.getAnimalGenerator();
 
-        getSupportLoaderManager().initLoader(LOADER_ID, null, new AnimalLoaderCallBacks());
-        Log.v(TAG, "onCreate");
+        listView = (ListView) findViewById(R.id.list_view);
+        animalsAdapter = new AnimalsAdapter();
+        listView.setAdapter(animalsAdapter);
 
-        refresh.setOnClickListener(new View.OnClickListener() {
+        addButton = (Button) findViewById(R.id.add_animal_button);
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSupportLoaderManager().getLoader(LOADER_ID).forceLoad();
+                Intent intent = new Intent(MainActivity.this, AddActivity.class);
+                startActivity(intent);
             }
         });
+
+
+        getSupportLoaderManager().initLoader(LOADER_ID, null, new AnimalLoaderCallBacks());
+        Log.e(TAG, "onCreate" + animalGenerator.getAnimals());
+
     }
 
-    private class AnimalLoaderCallBacks implements LoaderManager.LoaderCallbacks <Animal>{
+    private class AnimalLoaderCallBacks implements LoaderManager.LoaderCallbacks <List<Animal>>{
 
 
         @Override
-        public Loader<Animal> onCreateLoader(int id, Bundle args) {
-            return new AnimalLoader(MainActivity.this);
+        public Loader<List<Animal>> onCreateLoader(int id, Bundle args) {
+            return new AnimalLoader(MainActivity.this, animalGenerator);
         }
 
         @Override
-        public void onLoadFinished(Loader<Animal> loader, Animal data) {
-            type.setText(data.getmSpecies());
-            age.setText( data.getmAge());
-            name.setText(data.getmName());
+        public void onLoadFinished(Loader<List<Animal>> loader, List<Animal> data) {
+            animalsAdapter.setAnimals(data);
         }
 
         @Override
-        public void onLoaderReset(Loader<Animal> loader) {
+        public void onLoaderReset(Loader<List<Animal>> loader) {
             Log.e(TAG, "onLoaderReset" );
         }
     }
