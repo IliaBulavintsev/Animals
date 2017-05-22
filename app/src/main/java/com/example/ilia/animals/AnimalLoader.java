@@ -12,8 +12,6 @@ public class AnimalLoader extends AsyncTaskLoader<List<Animal>> implements Oncon
     private List<Animal> animals;
     private AnimalGenerator animalGenerator;
 
-
-
     public AnimalLoader(Context context, AnimalGenerator animalGenerator) {
         super(context);
         this.animalGenerator = animalGenerator;
@@ -38,7 +36,6 @@ public class AnimalLoader extends AsyncTaskLoader<List<Animal>> implements Oncon
             forceLoad();
         } else {
             Log.e(TAG, "onStartLoading: noforceload:"  );
-//            deliverResult(animals);
         }
         Log.v(TAG, "on start loading");
     }
@@ -48,6 +45,12 @@ public class AnimalLoader extends AsyncTaskLoader<List<Animal>> implements Oncon
         super.deliverResult(data);
         Log.e(TAG, "deliverResult: "+ data.toString() );
         animals = data;
+    }
+
+    @Override
+    protected void onReset() {
+        super.onReset();
+        animalGenerator.removeOnContentChangeListener(this);
     }
 
     @Override
